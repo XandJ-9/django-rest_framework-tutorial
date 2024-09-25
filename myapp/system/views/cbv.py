@@ -2,12 +2,12 @@ from rest_framework.views import APIView
 from rest_framework.generics import GenericAPIView
 from rest_framework.viewsets import ViewSet, GenericViewSet
 from rest_framework.response import Response
-from rest_framework.serializers import ModelSerializer
+from rest_framework import serializers
 from rest_framework.decorators import action
 
 from myapp.system.models import User, Account
 
-class UserSerializer(ModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['username','password']
@@ -49,6 +49,13 @@ class UserGenericAPIView(GenericAPIView):
         ser = self.get_serializer(instance=self.get_queryset(), many = True)
         return Response({"msg":"get请求", "data":ser.data})
 
+
+class AccountSerializer(serializers.ModelSerializer):
+    update_time = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S', read_only=True)  # 该字段只查询，创建对象时不检查该字段
+    class Meta:
+        model = Account
+        fields = ['username','password','update_time']
+        
 class AccountViewSet(ViewSet):
     '''
     继承ViewSet，实现增删改查
@@ -73,10 +80,32 @@ class AccountViewSet(ViewSet):
 
     def list(self,request):
         account_list = Account.objects.all()
-        return Response({"msg":"list请求", "list":account_list})
+        ser=AccountSerializer(account_list,many=True)
+        return Response({"msg":"list请求", "list":ser.data})
     
     @action(methods=['get'], detail=False, url_path="get_list")
     def get_list(self, request):
         account_list = Account.objects.all()
-        return Response({"msg":"get_list请求", "list":account_list})
+        ser = AccountSerializer(account_list, many=True)
+        return Response({"msg":"get_list请求", "list":ser.data})
     
+    def create(self,request):
+        '''
+        Router类中把create方法已经绑定到post请求上，因此这里实现create方法即可直接使用
+        '''
+        ser = AccountSerializer(data=request.data)
+        if ser.is_valid():
+            ser.save()
+            return Response({"msg":"保存对象"})
+        else:
+            return Response({"msg":"数据不合法", 'errors':ser.errors})
+
+
+
+class AccountGenericViewSet(GenericViewSet):
+    '''
+    泛型视图 ViewSet + GenericAPIView
+    扩展GenericAPIView的功能，添加了ViewSet的自定义请求处理
+    '''
+    queryset = Account.objects.all()
+    serializer_class = AccountSerializer
