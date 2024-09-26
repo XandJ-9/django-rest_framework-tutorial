@@ -18,11 +18,11 @@ class UserAPIView(APIView):
     需要实现get,post,delete,put等方法
     '''
     def get(self,request):
-        # 使用原生查询，从另外的库中查询数据返回
+        # 使用原生查询，从另外的库中查询数据返回, 指定要查询的数据库 using='other_db'
         user_list = User.objects.raw("select id,username, password from sys_user")
         # user_list = User.objects.all()
         ser = UserSerializer(user_list,many=True)
-        return Response({"msg":"get请求", "list":ser.data})
+        return Response({"msg":"UserAPIView get请求", "list":ser.data})
     def post(self,request):
         ser = UserSerializer(data=request.data)
         if ser.is_valid():
@@ -47,7 +47,7 @@ class UserGenericAPIView(GenericAPIView):
 
     def get(self,request):
         ser = self.get_serializer(instance=self.get_queryset(), many = True)
-        return Response({"msg":"get请求", "data":ser.data})
+        return Response({"msg":"UserGenericAPIView get请求", "data":ser.data})
 
 
 class AccountSerializer(serializers.ModelSerializer):
@@ -61,6 +61,7 @@ class AccountViewSet(ViewSet):
     继承ViewSet，实现增删改查
     viewset没有提供任何的行为来处理请求，因此需要提供一个actions参数来指定处理函数
     1. AccountViewSet.as_view(actions ={'get':'list',...})
+        需要实现 list, create, retrieve, update, destroy等方法
     2. 通过注解的方式绑定请求的处理方法 @actions
         @action(methods=['get'],detail=False)
         使用注解时，需要使用Router的方式注册viewset 
@@ -106,6 +107,12 @@ class AccountGenericViewSet(GenericViewSet):
     '''
     泛型视图 ViewSet + GenericAPIView
     扩展GenericAPIView的功能，添加了ViewSet的自定义请求处理
+
+    需要实现 list, create, retrieve, update, destroy等方法
     '''
     queryset = Account.objects.all()
     serializer_class = AccountSerializer
+
+    def list(self,request):
+        ser = self.get_serializer(instance=self.get_queryset(), many = True)
+        return Response({"msg":"list请求", "data":ser.data})
