@@ -10,7 +10,8 @@ class CommentGenericAPIView(GenericAPIView):
     lookup_field = 'pk'
     def get(self,request,*args,**kwargs):
         instance = self.get_queryset()
-        serializer = self.get_serializer(instance, many=True)
+        # 添加上下文信息
+        serializer = self.get_serializer(instance, many=True, context={'url':request.build_absolute_uri()})
         return Response(serializer.data)
     
     def post(self,request,*args,**kwargs):

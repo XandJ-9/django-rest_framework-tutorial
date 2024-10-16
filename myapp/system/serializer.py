@@ -15,6 +15,7 @@ class AccountSerializer(serializers.Serializer):
 
 class CommentSerializer(serializers.Serializer):
   content = serializers.CharField(max_length=32)
+  url = serializers.URLField()
   user = UserSerializer(required=True)
 
   def create(self, validated_data):
@@ -35,6 +36,7 @@ class CommentSerializer(serializers.Serializer):
     user_ser = UserSerializer(instance = user)
     return {
       'content': instance.content,
+      'url': self.context.get('url'),
       'user': user_ser.data
     }
   
