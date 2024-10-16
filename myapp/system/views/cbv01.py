@@ -6,11 +6,7 @@ from rest_framework import serializers
 from rest_framework.decorators import action
 
 from myapp.system.models import User, Account
-
-class UserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ['username','password']
+from myapp.system.serializer import UserSerializer, AccountSerializer
 
 class UserAPIView(APIView):
     '''
@@ -49,12 +45,15 @@ class UserGenericAPIView(GenericAPIView):
         ser = self.get_serializer(instance=self.get_queryset(), many = True)
         return Response({"msg":"UserGenericAPIView get请求", "data":ser.data})
 
+    def post(self,request):
+        ser = self.get_serializer(data=request.data)
+        if ser.is_valid():
+            ser.save()
+            return Response({"msg":"保存对象"})
+        else:
+            return Response({"msg":"数据不合法"})
 
-class AccountSerializer(serializers.ModelSerializer):
-    update_time = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S', read_only=True)  # 该字段只查询，创建对象时不检查该字段
-    class Meta:
-        model = Account
-        fields = ['username','password','update_time']
+
         
 class AccountViewSet(ViewSet):
     '''

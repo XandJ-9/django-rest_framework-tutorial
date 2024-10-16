@@ -9,7 +9,7 @@ class User(models.Model):
     update_time = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        db_table = 'sys_user'
+        db_table = 'user'
 
 
 class Account(models.Model):
@@ -18,4 +18,12 @@ class Account(models.Model):
     create_time = models.DateTimeField(auto_now_add=True)
     update_time = models.DateTimeField(auto_now_add=True)
     class Meta:
-        db_table = 'sys_account'
+        db_table = 'account'
+
+class Comment(models.Model):
+    user_id = models.IntegerField(null=True)
+    content = models.CharField(max_length=32)
+    create_time = models.DateTimeField(auto_now_add=True)
+    update_time = models.DateTimeField(auto_now_add=True)
+    class Meta:
+        db_table = 'comment'
