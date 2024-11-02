@@ -11,7 +11,9 @@ class UserSerializer(serializers.Serializer):
 
 class AccountSerializer(serializers.Serializer):
     update_time = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S', read_only=True)  # 该字段只查询，创建对象时不检查该字段
-
+    class Meta:
+      model = Account
+      fields = ('username','password','create_time','update_time')
 
 class CommentSerializer(serializers.Serializer):
   content = serializers.CharField(max_length=32)
