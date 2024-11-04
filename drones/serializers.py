@@ -4,7 +4,7 @@ from .models import Drone, DroneCategory, Competition, Pilot
 
 
 class DroneCategorySerializer(serializers.HyperlinkedModelSerializer):
-    drones_url = serializers.HyperlinkedRelatedField(
+    drones = serializers.HyperlinkedRelatedField(
     many=True,
     read_only=True,
     view_name='drone-detail')  # 指定字段访问的url视图名称
@@ -17,7 +17,7 @@ class DroneCategorySerializer(serializers.HyperlinkedModelSerializer):
         'url',
         'pk',
         'name',
-        'drones_url')
+        'drones')
 
 
 
