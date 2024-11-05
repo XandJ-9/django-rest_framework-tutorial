@@ -1,19 +1,8 @@
 from rest_framework import serializers 
 
+from django.contrib.auth.models import User
+
 from .models import Drone, DroneCategory, Competition, Pilot
-
-
-class DroneCategorySerializer(serializers.HyperlinkedModelSerializer):
-    drones = serializers.HyperlinkedRelatedField(
-    many=True,
-    read_only=True,
-    view_name='drone-detail')  # 指定字段访问的url视图名称
-
-    
-
-    class Meta:
-        model = DroneCategory
-        fields = '__all__'
 
 
 
@@ -22,10 +11,22 @@ class DroneSerializer(serializers.HyperlinkedModelSerializer):
     # 根据指定对象的 slug_field 字段来显示
     # 查找对象集合中name='xxx'的对象，并返回其slug值,默认返回主键值
     drone_category = serializers.SlugRelatedField(queryset=DroneCategory.objects.all(), slug_field='name')
-
+    owner = serializers.ReadOnlyField(source='owner.username')
     class Meta:
         model = Drone
         fields = '__all__'
+
+class DroneCategorySerializer(serializers.HyperlinkedModelSerializer):
+    # drones = serializers.HyperlinkedRelatedField(many=True,read_only=True,view_name='drone-detail')  # 指定字段访问的url视图名称
+    drones = DroneSerializer(many=True, read_only=True)
+    # drones = serializers.StringRelatedField(many=True)
+    class Meta:
+        model = DroneCategory
+        fields = '__all__'
+
+
+
+
 
 
 
@@ -75,3 +76,16 @@ class PilotCompetitionSerializer(serializers.ModelSerializer):
         'distance_achievement_date',
         'pilot',
         'drone')
+
+
+class UserDroneSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Drone
+        fields = ('url','name')
+
+class UserSerializer(serializers.HyperlinkedModelSerializer):
+    drones = UserDroneSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = User
+        fields = ('url','username','drones','pk')

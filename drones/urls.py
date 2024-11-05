@@ -1,18 +1,20 @@
 from django.urls import path
-from rest_framework.routers import SimpleRouter
+from rest_framework.routers import SimpleRouter,DefaultRouter, APIRootView
+from rest_framework.generics import GenericAPIView
+from rest_framework.response import Response
 
 # from .views import ApiRoot, DroneCategoryList,DroneCategoryDetail,DroneList, DroneDetail, CompetitionList, CompetitionDetail, PilotList, PilotDetail
 from .views import DroneCategoryViewSet, PilotViewSet, DroneViewSet, CompetitionViewSet
 
-router = SimpleRouter()
-router.register(r'category', DroneCategoryViewSet, basename='category')
+router = DefaultRouter()
+router.register(r'dronecategory', DroneCategoryViewSet, basename='dronecategory')
 router.register(r'drone', DroneViewSet, basename='drone')
 router.register(r'pilot', PilotViewSet, basename='pilot')
 router.register(r'competition', CompetitionViewSet, basename='competition')
 
 
 urlpatterns = [
-    # path('', ApiRoot.as_view(), name=ApiRoot.name),
+    path('', router.get_api_root_view()), 
     # path('categories/', DroneCategoryList.as_view(), name=DroneCategoryList.name),
     # path('category/<int:pk>', DroneCategoryDetail.as_view(), name=DroneCategoryDetail.name),
     # path('drones/', DroneList.as_view(), name=DroneList.name),
@@ -22,6 +24,8 @@ urlpatterns = [
     # path('competitions/', CompetitionList.as_view(), name=CompetitionList.name),
     # path('competition/<int:pk>', CompetitionDetail.as_view(), name=CompetitionDetail.name),
 ]
+
+
 
 
 urlpatterns += router.urls

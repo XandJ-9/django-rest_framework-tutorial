@@ -3,8 +3,10 @@ from django.urls import reverse
 from rest_framework import generics
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from drones.models import DroneCategory, Drone, Pilot, Competition
 from drones.serializers import DroneCategorySerializer, DroneSerializer, PilotSerializer, PilotCompetitionSerializer
+from drones.custompermission import IsCurrentUserOwnerOrReadOnly
 
 # Create your views here.
 
@@ -51,6 +53,9 @@ class DroneCategoryViewSet(ModelViewSet):
 class DroneViewSet(ModelViewSet):
     queryset = Drone.objects.all()
     serializer_class = DroneSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly, IsCurrentUserOwnerOrReadOnly]
+    def perform_create(self, serializer):
+        return serializer.save(owner=self.request.user)
 
 # class PilotList(generics.ListCreateAPIView):
 #     queryset = Pilot.objects.all()
@@ -82,4 +87,3 @@ class PilotViewSet(ModelViewSet):
 class CompetitionViewSet(ModelViewSet):
     queryset = Competition.objects.all()
     serializer_class = PilotCompetitionSerializer
-    

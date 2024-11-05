@@ -21,4 +21,5 @@ urlpatterns = [
     # path('admin/', admin.site.urls),
     # path('myapp/', include('myapp.system.urls')),
     path('', include('drones.urls')),
+    path('api-auth/', include('rest_framework.urls'))
 ]
