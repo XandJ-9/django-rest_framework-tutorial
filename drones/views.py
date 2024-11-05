@@ -8,64 +8,78 @@ from drones.serializers import DroneCategorySerializer, DroneSerializer, PilotSe
 
 # Create your views here.
 
-class ApiRoot(generics.GenericAPIView):
-    name = 'api-root'
-    def get(self, request):
-        return Response({
-            "categories/": reverse(DroneCategoryList.name),
-            "drones/": reverse(DroneList.name),
-            "pilots/": reverse(PilotList.name),
-            "competitions/": reverse(CompetitionList.name),
-        })
+# class ApiRoot(generics.GenericAPIView):
+#     name = 'api-root'
+#     def get(self, request):
+#         return Response({
+#             "categories/": reverse(DroneCategoryViewSet.name),
+#             "drones/": reverse(DroneList.name),
+#             "pilots/": reverse(PilotList.name),
+#             "competitions/": reverse(CompetitionList.name),
+#         })
 
 
-class DroneCategoryList(generics.ListCreateAPIView):
+# class DroneCategoryList(generics.ListCreateAPIView):
+#     queryset = DroneCategory.objects.all()
+#     serializer_class = DroneCategorySerializer
+#     name = 'dronecategory-list'
+
+
+
+# class DroneCategoryDetail(generics.RetrieveUpdateDestroyAPIView):
+#     queryset = DroneCategory.objects.all()
+#     serializer_class = DroneCategorySerializer
+#     name = 'dronecategory-detail'
+
+
+class DroneCategoryViewSet(ModelViewSet):
     queryset = DroneCategory.objects.all()
     serializer_class = DroneCategorySerializer
-    name = 'dronecategory-list'
 
 
-
-class DroneCategoryDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = DroneCategory.objects.all()
-    serializer_class = DroneCategorySerializer
-    name = 'dronecategory-detail'
-
+# class DroneList(generics.ListCreateAPIView):
+#     queryset = Drone.objects.all()
+#     serializer_class = DroneSerializer
+#     name = 'drone-list'
 
 
-class DroneList(generics.ListCreateAPIView):
+# class DroneDetail(generics.RetrieveUpdateDestroyAPIView):
+#     queryset = Drone.objects.all()
+#     serializer_class = DroneSerializer
+#     name = 'drone-detail'
+
+class DroneViewSet(ModelViewSet):
     queryset = Drone.objects.all()
     serializer_class = DroneSerializer
-    name = 'drone-list'
+
+# class PilotList(generics.ListCreateAPIView):
+#     queryset = Pilot.objects.all()
+#     serializer_class = PilotSerializer
+#     name = 'pilot-list'
 
 
-class DroneDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Drone.objects.all()
-    serializer_class = DroneSerializer
-    name = 'drone-detail'
+# class PilotDetail(generics.RetrieveUpdateDestroyAPIView):
+#     queryset = Pilot.objects.all()
+#     serializer_class = PilotSerializer
+#     name = 'pilot-detail'
 
-
-class PilotList(generics.ListCreateAPIView):
+class PilotViewSet(ModelViewSet):
     queryset = Pilot.objects.all()
     serializer_class = PilotSerializer
-    name = 'pilot-list'
+
+# class CompetitionList(generics.ListCreateAPIView):
+#     queryset = Competition.objects.all()
+#     serializer_class = PilotCompetitionSerializer
+#     name = 'competition-list'
 
 
-class PilotDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Pilot.objects.all()
-    serializer_class = PilotSerializer
-    name = 'pilot-detail'
+# class CompetitionDetail(generics.RetrieveUpdateDestroyAPIView):
+#     queryset = Competition.objects.all()
+#     serializer_class = PilotCompetitionSerializer
+#     name = 'competition-detail'
 
 
-class CompetitionList(generics.ListCreateAPIView):
+class CompetitionViewSet(ModelViewSet):
     queryset = Competition.objects.all()
     serializer_class = PilotCompetitionSerializer
-    name = 'competition-list'
-
-
-class CompetitionDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Competition.objects.all()
-    serializer_class = PilotCompetitionSerializer
-    name = 'competition-detail'
-
-
+    
